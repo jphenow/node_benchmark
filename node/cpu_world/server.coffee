@@ -1,7 +1,6 @@
 server = require('http').createServer (request, response) ->
     response.writeHead 200, {'Content-Type': 'text/plain'}
-    fib 10, (n)->
-      console.log "got #{n}"
+    fib 20, (n)->
       response.end "Number #{n}"
 server.listen 8000
 console.log 'Server running at http://0.0.0.0:8000/'
