@@ -28,3 +28,5 @@ if can_continue
     puts "There was an issue setting up your environment"
   end
 end
+
+puts "Apache+PHP tests assume that you place files from within ./php to the root of your localhost:80 server"
