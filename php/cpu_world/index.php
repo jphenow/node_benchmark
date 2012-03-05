@@ -1,5 +1,5 @@
-<?
-echo("Fibonacci: " . fibonacci(20));
+<?php
+echo "Fibonacci: " . fibonacci(20);
 
 function fibonacci($n){
   if($n < 2){
