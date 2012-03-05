@@ -1,12 +1,11 @@
 server = require('http').createServer (request, response) ->
     response.writeHead 200, {'Content-Type': 'text/plain'}
-    fib 20, (n)->
-      response.end "Number #{n}"
+    response.end "Number #{fib(40)}"
 server.listen 8000
 console.log 'Server running at http://0.0.0.0:8000/'
 
-fib = (n, fn) ->
-  if n < 2
-    fn(n)
+fib = (n) ->
+  if (n < 2)
+    1
   else
-    fib(n-1, fn) + fib(n-2, fn)
+    fib(n-2) + fib(n-1)
