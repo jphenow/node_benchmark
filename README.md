@@ -19,6 +19,9 @@ accessible directory with PHP module enabled.
 
 Be sure to run a `bundle install` in the top directory to get Ruby dependencies.
 
+*This may change. I hope to implement a good way to swap these each and run each of them
+to get results*
+
 ## You need
 
 * Ruby 1.9.2+
