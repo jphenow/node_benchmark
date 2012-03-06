@@ -9,17 +9,17 @@ class Echo(Protocol):
     fib = 0
 
     if n == 0 or n == 1:
-      self.send_resp(n)
+      self.sendResp(n)
     for n in range(2, n+1):
       fib = fibminus1 + fibminus2
       fibminus2 = fibminus1
       fibminus1 = fib
-    self.send_resp(fib)
+    self.sendResp(fib)
 
   def connectionMade(self):
     self.fibonacci(20)
 
-  def send_resp(self, n):
+  def sendResp(self, n):
     self.transport.write("Fibonacci: " + str(n))
     self.transport.loseConnection()
 
