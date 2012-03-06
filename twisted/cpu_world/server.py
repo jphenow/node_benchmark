@@ -3,8 +3,24 @@ from twisted.internet.endpoints import TCP4ServerEndpoint
 from twisted.internet import reactor
 
 class Echo(Protocol):
+  def fibonacci(self, n):
+    fibminus2 = 0
+    fibminus1 = 1
+    fib = 0
+
+    if n == 0 or n == 1:
+      self.send_resp(n)
+    for n in range(2, n+1):
+      fib = fibminus1 + fibminus2
+      fibminus2 = fibminus1
+      fibminus1 = fib
+    self.send_resp(fib)
+
   def connectionMade(self):
-    self.transport.write("Hello World")
+    self.fibonacci(20)
+
+  def send_resp(self, n):
+    self.transport.write("Fibonacci: " + str(n))
     self.transport.loseConnection()
 
 class EchoFactory(Factory):
