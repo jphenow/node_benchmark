@@ -24,18 +24,16 @@ query_db = (callback)->
     ).connect (error)->
         if error
           return console.log('CONNECTION error: ' + error);
-        this.query().
-            select('name, email_address').
-            from(['user', 'profile']).
-            where('profile.id = user.profile_id').
-            execute (error, rows, cols)->
+        for n in [0..1000]
+          this.query().
+            insert('user',
+            ['name', 'profile_id'],
+            ['Node', 2]
+            ).
+            execute (error, result)->
               if error
                 console.log "ERROR: #{error}"
-                return
-              callback(print_records(rows))
+        callback(print_records("Finished Inserts!"))
 
-print_records = (rows)->
-  final = ""
-  for row in rows
-    final += JSON.stringify(row)
-  final
+print_records = (output)->
+  output

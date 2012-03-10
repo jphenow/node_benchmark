@@ -11,11 +11,12 @@ class Echo(Protocol):
                             passwd = "",
                             db = "benchmark")
     cursor = conn.cursor()
-    cursor.execute("SELECT name, email_address FROM user, profile WHERE profile.id = user.profile_id")
-    rows = cursor.fetchall()
+    for x in range(1000):
+      cursor.execute("INSERT INTO user (name, profile_id) VALUES ('Twisted', 4)")
+    conn.commit()
     cursor.close()
     conn.close()
-    self.sendResp(rows)
+    self.sendResp("Finished Twisted Inserts!")
 
   def connectionMade(self):
     self.dbSetupAndRun()

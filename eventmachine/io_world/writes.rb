@@ -13,11 +13,15 @@ module Http
     db_defaults = {:host => "localhost", :user => "root", :password => nil,
                    :port => 3306, :sock => nil, :adapter => 'mysql', :database => 'benchmark'}
     dba = Sequel.connect db_defaults
-    self.send(callback, dba["SELECT name, email_address FROM user, profile WHERE profile.id = user.profile_id"].all)
+    1000.times do
+      dba.run("INSERT INTO user (name, profile_id)
+                               VALUES ('EVENTMACHINE', 1)")
+    end
+    self.send(callback, "Inserts Complete!")
   end
 
   def cb(data)
-    send_data data
+    send_data "Inserts complete!"
   end
 end
 
