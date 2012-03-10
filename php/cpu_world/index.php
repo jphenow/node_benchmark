@@ -1,12 +1,20 @@
 <?php
 echo "Fibonacci: " . fibonacci(20);
 
-function fibonacci($n){
-  if($n < 2){
-    return 1;
+function fibonacci(y, cb){
+  fibminus2 = 0;
+  fibminus1 = 1;
+  fib = 0;
+
+  if y == 0 or y == 1{
+    return y;
   }
-  else {
-    return fibonacci($n-2) + fibonacci($n-1);
+  for(i=2;i <= y; i++){
+    fib = fibminus1 + fibminus2;
+    fibminus2 = fibminus1;
+    fibminus1 = fib;
   }
+
+  return fib;
 }
 ?>
