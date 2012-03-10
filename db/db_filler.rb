@@ -19,7 +19,7 @@ module SetupDb
 
     def generate_fillers
       fillers = []
-      1000.times do
+      10000.times do
         fillers << {:name => Faker::Name.name, :email_address => Faker::Internet.email}
       end
       fillers
