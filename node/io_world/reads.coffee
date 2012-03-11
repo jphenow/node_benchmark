@@ -13,10 +13,10 @@ console.log 'Server running at http://0.0.0.0:8000/'
 
 query_db = (callback)->
     new mysql.Database({
-      hostname: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'benchmark'
+      hostname: process.env.BENCHMARK_HOST,
+      user: process.env.BENCHMARK_USER,
+      password: process.env.BENCHMARK_PASS,
+      database: process.env.BENCHMARK_DB
     }).on('error', (error)->
         console.log "ERROR: #{error}"
     ).on('ready', (server)->

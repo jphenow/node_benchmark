@@ -13,10 +13,10 @@ console.log 'Server running at http://0.0.0.0:8000/'
 
 query_db = (callback)->
     new mysql.Database({
-      hostname: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'benchmark'
+      hostname: process.env.BENCHMARK_HOST,
+      user: process.env.BENCHMARK_USER,
+      password: process.env.BENCHMARK_PASS,
+      database: process.env.BENCHMARK_DB
     }).on('error', (error)->
         console.log "ERROR: #{error}"
     ).on('ready', (server)->
@@ -24,16 +24,9 @@ query_db = (callback)->
     ).connect (error)->
         if error
           return console.log('CONNECTION error: ' + error);
-        for n in [0..1000]
-          this.query().
-            insert('user',
-            ['name', 'profile_id'],
-            ['Node', 2]
-            ).
-            execute (error, result)->
-              if error
-                console.log "ERROR: #{error}"
-        callback(print_records("Finished Inserts!"))
-
-print_records = (output)->
-  output
+        for n in [0..100]
+          this.query("INSERT INTO user (name, profile_id) VALUES ('Node', 2)").
+          execute (error, result)->
+            if error
+              console.log "ERROR: #{error}"
+        callback("Finished Inserts!")
