@@ -10,9 +10,9 @@ module Http
   end
 
   def db(callback)
-    db_defaults = {:host => "localhost", :user => "root", :password => nil,
-                   :port => 3306, :sock => nil, :adapter => 'mysql', :database => 'benchmark'}
-    dba = Sequel.connect db_defaults
+    config = {:host => ENV['BENCHMARK_HOST'], :user => ENV['BENCHMARK_USER'], :password => ENV['BENCHMARK_PASS'],
+              :port => ENV['BENCHMARK_PORT'], :sock => nil, :adapter => 'mysql', :database => ENV['BENCHMARK_DB']}
+    dba = Sequel.connect config
     1000.times do
       dba.run("INSERT INTO user (name, profile_id)
                                VALUES ('EVENTMACHINE', 1)")

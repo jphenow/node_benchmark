@@ -2,14 +2,15 @@ from twisted.internet.protocol import Factory, Protocol
 from twisted.internet.endpoints import TCP4ServerEndpoint
 from twisted.internet import reactor
 import MySQLdb
+import os
 
 
 class Echo(Protocol):
   def dbSetupAndRun(self):
-    conn = MySQLdb.connect(host = "localhost",
-                            user = "root",
-                            passwd = "",
-                            db = "benchmark")
+    conn = MySQLdb.connect(host = os.environ[ 'BENCHMARK_HOST' ],
+                            user = os.environ[ 'BENCHMARK_USER' ],
+                            passwd = os.environ[ 'BENCHMARK_PASS' ],
+                            db = os.environ[ 'BENCHMARK_DB' ])
     cursor = conn.cursor()
     cursor.execute("SELECT name, email_address FROM user, profile WHERE profile.id = user.profile_id")
     rows = cursor.fetchall()

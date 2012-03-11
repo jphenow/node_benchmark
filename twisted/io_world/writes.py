@@ -6,10 +6,10 @@ import MySQLdb
 
 class Echo(Protocol):
   def dbSetupAndRun(self):
-    conn = MySQLdb.connect(host = "localhost",
-                            user = "root",
-                            passwd = "",
-                            db = "benchmark")
+    conn = MySQLdb.connect(host = os.environ[ 'BENCHMARK_HOST' ],
+                            user = os.environ[ 'BENCHMARK_USER' ],
+                            passwd = os.environ[ 'BENCHMARK_PASS' ],
+                            db = os.environ[ 'BENCHMARK_DB' ])
     cursor = conn.cursor()
     for x in range(1000):
       cursor.execute("INSERT INTO user (name, profile_id) VALUES ('Twisted', 4)")
