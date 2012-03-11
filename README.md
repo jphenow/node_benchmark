@@ -39,6 +39,8 @@ You'll also want to set the environment variables accordingly:
 * `BENCHMARK_DB`
 * `BENCHMARK_PORT`
 
+**I didn't have time to switch to using this method for PHP so the php/io_world/db.php must be filled in**
+
 ## Things you might want
 
 It might be more "fair" to ensure that the Database you connect to is running on a
