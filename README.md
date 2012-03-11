@@ -29,6 +29,15 @@ to get results*
 * Node.js v0.6.7+
 * PHP 5.3.8
 * Apache
+* MySQL
+
+You'll also want to set the environment variables accordingly:
+
+* `BENCHMARK_HOST`
+* `BENCHMARK_USER`
+* `BENCHMARK_PASS`
+* `BENCHMARK_DB`
+* `BENCHMARK_PORT`
 
 ## Things you might want
 

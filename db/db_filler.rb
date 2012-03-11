@@ -10,7 +10,9 @@ module SetupDb
     def initialize
       db_defaults = {:host => "localhost", :user => "root", :password => nil,
                     :port => 3306, :sock => nil, :adapter => 'mysql', :database => 'benchmark'}
-      db_connection = db_defaults.merge(YAML::load(File.open('db_config.yml')))
+      config = {:host => ENV['BENCHMARK_HOST'], :user => ENV['BENCHMARK_USER'], :password => ENV['BENCHMARK_PASS'],
+                :port => ENV['BENCHMARK_PORT'], :sock => nil, :adapter => 'mysql', :database => ENV['BENCHMARK_DB']}
+      db_connection = db_defaults.merge config
       reset_and_init_db(db_connection)
       fill_db(generate_fillers)
 
@@ -34,18 +36,16 @@ module SetupDb
 
     def reset_and_init_db(connection)
       @db = Sequel.connect connection
-      @db.run "DROP DATABASE IF EXISTS benchmark;"
-      @db.run "CREATE DATABASE benchmark;"
 
       # Need to reset connection, because above loses us selection of the
       # database
       @db.disconnect
       @db = Sequel.connect connection
-      @db.create_table :profile do
+      @db.create_table! :profile do
         primary_key :id
         varchar :email_address, :size => 100
       end
-      @db.create_table :user do
+      @db.create_table! :user do
         primary_key :id
         varchar :name, :size => 50
         foreign_key :profile_id, :profile
