@@ -2,6 +2,7 @@ from twisted.internet.protocol import Factory, Protocol
 from twisted.internet.endpoints import TCP4ServerEndpoint
 from twisted.internet import reactor
 import MySQLdb
+import os
 
 
 class Echo(Protocol):
@@ -11,7 +12,7 @@ class Echo(Protocol):
                             passwd = os.environ[ 'BENCHMARK_PASS' ],
                             db = os.environ[ 'BENCHMARK_DB' ])
     cursor = conn.cursor()
-    for x in range(1000):
+    for x in range(20):
       cursor.execute("INSERT INTO user (name, profile_id) VALUES ('Twisted', 4)")
     conn.commit()
     cursor.close()
@@ -30,9 +31,6 @@ class EchoFactory(Factory):
   def buildProtocol(self, addr):
     return Echo()
 
-  def __init__(self, quote=None):
-    self.quote = quote or 'An apple a day keeps the doctor away'
-
-endpoint = TCP4ServerEndpoint(reactor, 8000)
-endpoint.listen(EchoFactory())
+#endpoint = TCP4ServerEndpoint(reactor, 8000)
+reactor.listenTCP(8000, EchoFactory())
 reactor.run()

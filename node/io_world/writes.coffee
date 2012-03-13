@@ -1,6 +1,6 @@
 http = require 'http'
 fs = require 'fs'
-mysql = require 'db-mysql'
+mysql = require 'mysql'
 
 server = http.createServer (request, response)->
   query_db (content)->
@@ -9,24 +9,26 @@ server = http.createServer (request, response)->
 
 server.listen 8000
 console.log 'Server running at http://0.0.0.0:8000/'
-
+host = String(process.env.BENCHMARK_HOST)
+user = String(process.env.BENCHMARK_USER)
+pass = String(process.env.BENCHMARK_PASS)
+db = String(process.env.BENCHMARK_DB)
 
 query_db = (callback)->
-    new mysql.Database({
-      hostname: process.env.BENCHMARK_HOST,
-      user: process.env.BENCHMARK_USER,
-      password: process.env.BENCHMARK_PASS,
-      database: process.env.BENCHMARK_DB
-    }).on('error', (error)->
-        console.log "ERROR: #{error}"
-    ).on('ready', (server)->
-        console.log "Connected to #{server.hostname} (#{server.version})"
-    ).connect (error)->
-        if error
-          return console.log('CONNECTION error: ' + error);
-        for n in [0..100]
-          this.query("INSERT INTO user (name, profile_id) VALUES ('Node', 2)").
-          execute (error, result)->
-            if error
-              console.log "ERROR: #{error}"
-        callback("Finished Inserts!")
+  client = mysql.createClient
+    user: user
+    password: pass
+    host: host
+
+  client.query "USE #{db}", (err)->
+    insert_times client, callback, 20
+
+insert_times = (client, callback, iteration)->
+  if iteration >= 1
+    client.query "INSERT INTO user (name, profile_id) VALUES ('Node', 2)",
+      (err)->
+        iteration = iteration - 1
+        insert_times(client, callback, iteration)
+  else
+    client.end()
+    callback("Insert complete")

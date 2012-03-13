@@ -13,11 +13,12 @@ module Http
     config = {:host => ENV['BENCHMARK_HOST'], :user => ENV['BENCHMARK_USER'], :password => ENV['BENCHMARK_PASS'],
               :port => ENV['BENCHMARK_PORT'], :sock => nil, :adapter => 'mysql', :database => ENV['BENCHMARK_DB']}
     dba = Sequel.connect config
-    1000.times do
+    20.times do
       dba.run("INSERT INTO user (name, profile_id)
                                VALUES ('EVENTMACHINE', 1)")
     end
     self.send(callback, "Inserts Complete!")
+    dba.disconnect
   end
 
   def cb(data)

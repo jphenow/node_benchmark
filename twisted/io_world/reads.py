@@ -6,23 +6,18 @@ import os
 
 
 class Echo(Protocol):
-  def dbSetupAndRun(self):
+  def connectionMade(self):
     conn = MySQLdb.connect(host = os.environ[ 'BENCHMARK_HOST' ],
                             user = os.environ[ 'BENCHMARK_USER' ],
                             passwd = os.environ[ 'BENCHMARK_PASS' ],
                             db = os.environ[ 'BENCHMARK_DB' ])
     cursor = conn.cursor()
     cursor.execute("SELECT name, email_address FROM user, profile WHERE profile.id = user.profile_id")
-    rows = cursor.fetchall()
+    rows = str(cursor.fetchall())
+    conn.commit()
     cursor.close()
     conn.close()
-    self.sendResp(rows)
-
-  def connectionMade(self):
-    self.dbSetupAndRun()
-
-  def sendResp(self, data):
-    self.transport.write(str(data))
+    self.transport.write(rows)
     self.transport.loseConnection()
 
 class EchoFactory(Factory):
@@ -30,9 +25,6 @@ class EchoFactory(Factory):
   def buildProtocol(self, addr):
     return Echo()
 
-  def __init__(self, quote=None):
-    self.quote = quote or 'An apple a day keeps the doctor away'
-
-endpoint = TCP4ServerEndpoint(reactor, 8000)
-endpoint.listen(EchoFactory())
+#endpoint = TCP4ServerEndpoint(reactor, 8000)
+reactor.listenTCP(8000, EchoFactory())
 reactor.run()

@@ -1,6 +1,6 @@
 <?php
   include 'db.php';
-  for($i = 0; $i <= 1000; $i++){
+  for($i = 0; $i <= 20; $i++){
     mysql_query("INSERT INTO user (name, profile_id)
                                 VALUES ('PHP', 3)");
   }

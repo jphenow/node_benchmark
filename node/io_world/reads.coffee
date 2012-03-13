@@ -1,6 +1,6 @@
 http = require 'http'
 fs = require 'fs'
-mysql = require 'db-mysql'
+mysql = require 'mysql'
 
 server = http.createServer (request, response)->
   query_db (content)->
@@ -9,33 +9,22 @@ server = http.createServer (request, response)->
 
 server.listen 8000
 console.log 'Server running at http://0.0.0.0:8000/'
-
+host = String(process.env.BENCHMARK_HOST)
+user = String(process.env.BENCHMARK_USER)
+pass = String(process.env.BENCHMARK_PASS)
+db = String(process.env.BENCHMARK_DB)
 
 query_db = (callback)->
-    new mysql.Database({
-      hostname: process.env.BENCHMARK_HOST,
-      user: process.env.BENCHMARK_USER,
-      password: process.env.BENCHMARK_PASS,
-      database: process.env.BENCHMARK_DB
-    }).on('error', (error)->
-        console.log "ERROR: #{error}"
-    ).on('ready', (server)->
-        console.log "Connected to #{server.hostname} (#{server.version})"
-    ).connect (error)->
-        if error
-          return console.log('CONNECTION error: ' + error);
-        this.query().
-            select('name, email_address').
-            from(['user', 'profile']).
-            where('profile.id = user.profile_id').
-            execute (error, rows, cols)->
-              if error
-                console.log "ERROR: #{error}"
-                return
-              callback(print_records(rows))
+  client = mysql.createClient
+    user: user
+    password: pass
+    host: host
 
-print_records = (rows)->
-  final = ""
-  for row in rows
-    final += JSON.stringify(row)
-  final
+  client.query "USE #{db}", (err)->
+    client.query "SELECT name, email_address from user, profile where profile.id = user.profile_id",
+      (err, results, fields)->
+        final = ""
+        for row in results
+          final += JSON.stringify(row)
+        client.end()
+        callback(final)
